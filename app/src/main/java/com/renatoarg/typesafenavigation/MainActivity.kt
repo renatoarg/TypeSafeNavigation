@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.renatoarg.typesafenavigation.ui._history.HistoryScreen
+import com.renatoarg.typesafenavigation.ui._home.HomeScreen
 import com.renatoarg.typesafenavigation.ui.theme.TypeSafeNavigationTheme
 import kotlinx.serialization.Serializable
 
@@ -29,30 +31,18 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = ScreenA
+                    startDestination = HomeScreen
                 ) {
-                    composable<ScreenA> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Button(onClick = { navController.navigate(ScreenB("Renato", 12)) } ) {
-                                Text(text = "Go to Screen B")
-                            }
-                        }
+                    composable<HomeScreen> {
+                        HomeScreen(
+                            navController = navController
+                        )
                     }
-                    composable<ScreenB> {
-                        val args = it.toRoute<ScreenB>()
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Button(onClick = { navController.navigateUp() } ) {
-                                Text(text = "${args.name}, ${args.age} years old.")
-                            }
-                        }
+                    composable<HistoryScreen> { navBackStackEntry ->
+                        HistoryScreen(
+                            navController = navController,
+                            navBackStackEntry = navBackStackEntry
+                        )
                     }
                 }
             }
@@ -61,10 +51,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Serializable
-object ScreenA
+object HomeScreen
 
 @Serializable
-data class ScreenB(
+data class HistoryScreen(
     val name : String?,
     val age: Int
 )
